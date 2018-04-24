@@ -70,7 +70,7 @@ local function split( str, sep, plain )
             head, tail = strfind( str, sep, pos, plain );
         end
 
-        if #str > pos then
+        if pos <= #str then
             arr[idx + 1] = strsub( str, pos );
         end
 
