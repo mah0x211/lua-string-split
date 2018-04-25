@@ -12,7 +12,7 @@ luarocks install string-split --from=http://mah0x211.github.io/rocks/
 
 ## Function
 
-### arr = split( str [, sep [, plain]] )
+### arr = split( str [, sep [, limit [, plain]]] )
 
 returns an array of substrings.
 
@@ -20,6 +20,7 @@ returns an array of substrings.
 
 - `str:string`: string.
 - `sep:string`: separator string.
+- `limit:number`: limit on the number of splits.
 - `plain:boolean`: turns off the pattern matching facilities if true.
 
 **Returns**
