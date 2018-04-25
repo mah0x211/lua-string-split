@@ -30,18 +30,32 @@ local type = type;
 local error = error;
 local strsub = string.sub;
 local strfind = string.find;
+--- constants
+local INF_POS = math.huge;
+local INF_NEG = -INF_POS;
+
+
+--- isFinite
+-- @param arg
+-- @return ok
+local function isFinite( arg )
+    return type( arg ) == 'number' and ( arg < INF_POS and arg > INF_NEG );
+end
 
 
 --- split
 -- @param str
 -- @param sep
+-- @param limit
 -- @param plain
 -- @return arr
-local function split( str, sep, plain )
+local function split( str, sep, limit, plain )
     if type( str ) ~= 'string' then
         error( 'str must be string', 2 );
     elseif sep ~= nil and type( sep ) ~= 'string' then
         error( 'sep must be string', 2 );
+    elseif limit ~= nil and not isFinite( limit ) then
+        error( 'limit must be finite-integer', 2 );
     elseif plain ~= nil and type( plain ) ~= 'boolean' then
         error( 'plain must be boolean', 2 );
     -- empty-string
@@ -52,6 +66,19 @@ local function split( str, sep, plain )
     elseif sep == '' then
         local arr = {};
 
+        if limit then
+            for i = 1, #str do
+                if i > limit then
+                    arr[i] = strsub( str, i );
+                    return arr;
+                end
+
+                arr[i] = strsub( str, i, i );
+            end
+
+            return arr;
+        end
+
         for i = 1, #str do
             arr[i] = strsub( str, i, i );
         end
@@ -59,19 +86,32 @@ local function split( str, sep, plain )
         return arr;
     else
         local arr = {};
-        local idx = 0;
+        local idx = 1;
         local pos = 0;
         local head, tail = strfind( str, sep, pos, plain );
 
-        while head do
-            idx = idx + 1;
-            arr[idx] = strsub( str, pos, head - 1 );
-            pos = tail + 1;
-            head, tail = strfind( str, sep, pos, plain );
+        if limit then
+            while head do
+                if idx > limit then
+                    break
+                end
+
+                arr[idx] = strsub( str, pos, head - 1 );
+                idx = idx + 1;
+                pos = tail + 1;
+                head, tail = strfind( str, sep, pos, plain );
+            end
+        else
+            while head do
+                arr[idx] = strsub( str, pos, head - 1 );
+                idx = idx + 1;
+                pos = tail + 1;
+                head, tail = strfind( str, sep, pos, plain );
+            end
         end
 
         if pos <= #str then
-            arr[idx + 1] = strsub( str, pos );
+            arr[idx] = strsub( str, pos );
         end
 
         return arr;
