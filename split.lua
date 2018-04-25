@@ -46,7 +46,7 @@ local function split( str, sep, plain )
         error( 'plain must be boolean', 2 );
     -- empty-string
     elseif str == '' then
-        return {};
+        return { '' };
     elseif sep == nil then
         return { str };
     elseif sep == '' then
