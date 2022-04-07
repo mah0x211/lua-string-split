@@ -1,48 +1,77 @@
 # lua-string-split
 
+[![test](https://github.com/mah0x211/lua-string-split/actions/workflows/test.yml/badge.svg)](https://github.com/mah0x211/lua-string-split/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/mah0x211/lua-string-split/branch/master/graph/badge.svg)](https://codecov.io/gh/mah0x211/lua-string-split)
+
+
 split a string into an array of substrings.
 
----
 
 ## Installation
 
 ```sh
-luarocks install string-split --from=http://mah0x211.github.io/rocks/
+luarocks install string-split
 ```
 
-## Function
+---
 
-### arr = split( str [, sep [, limit [, plain]]] )
 
-returns an array of substrings.
+## arr = split( s, sep [, limit [, plain]] )
 
-**Parameters**
+splits `s` by `sep` and returns an array of its substrings.
 
-- `str:string`: string.
-- `sep:string`: separator string.
-- `limit:number`: limit on the number of splits.
-- `plain:boolean`: turns off the pattern matching facilities if true.
+**Params**
+
+- `s:string`: string
+- `sep:string`: seperator pattern string
+- `limit:number`: splits `s` up to `limit` times
+- `plain:boolean`: if `true`, the `sep` will be used as a plain string
 
 **Returns**
 
-- `arr:table`: an array of substrings.
+- `arr:table`: an array of substrings
+
+
+
+## arr = split.after( s, sep [, limit [, plain]] )
+
+splits `s` after a `sep` and returns an array of its substrings.
+
+**Params**
+
+- `s:string`: string
+- `sep:string`: seperator pattern string
+- `limit:number`: splits `s` up to `limit` times
+- `plain:boolean`: if `true`, the `sep` will be used as a plain string
+
+**Returns**
+
+- `arr:table`: an array of substrings
+
+
+## arr = split.fields( s )
+
+splits `s` around each whitespace and returns an array of substrings.
+
+**Params**
+
+- `s:string`: string
+
+**Returns**
+
+- `arr:table`: an array of substrings
+
 
 
 ## Usage
 
 ```lua
 local split = require('string.split')
--- you must install dump module from https://github.com/mah0x211/lua-dump 
+-- you must install dump module from https://github.com/mah0x211/lua-dump
 -- or luarocks install dump
-local dump = require('dump') 
+local dump = require('dump')
 
-
-print( dump( split(':foo::bar:::baz') ) )
--- {
---     [1] = ":foo::bar:::baz"
--- }
-
-print( dump( split(':foo::bar:::baz', '') ) )
+print(dump(split(':foo::bar:::baz', '')))
 -- {
 --     [1] = ":",
 --     [2] = "f",
@@ -61,7 +90,7 @@ print( dump( split(':foo::bar:::baz', '') ) )
 --     [15] = "z"
 -- }
 
-print( dump( split(':foo::bar:::baz', ':') ) )
+print(dump(split(':foo::bar:::baz', ':')))
 -- {
 --     [1] = "",
 --     [2] = "foo",
@@ -72,11 +101,26 @@ print( dump( split(':foo::bar:::baz', ':') ) )
 --     [7] = "baz"
 -- }
 
-print( dump( split(':foo::bar:::baz', ':+') ) )
+print(dump(split(':foo::bar:::baz', ':+')))
 -- {
 --     [1] = "",
 --     [2] = "foo",
 --     [3] = "bar",
 --     [4] = "baz"
+-- }
+
+print(dump(split.after('foo/bar//baz/qux', '/+')))
+-- {
+--     [1] = "foo/",
+--     [2] = "bar//",
+--     [3] = "baz/",
+--     [4] = "qux"
+-- }
+
+print(dump(split.fields('  foo \nbar \t    \n  baz')))
+-- {
+--     [1] = "foo",
+--     [2] = "bar",
+--     [3] = "baz"
 -- }
 ```

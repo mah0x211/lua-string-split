@@ -1,7 +1,7 @@
 package = "string-split"
 version = "scm-1"
 source = {
-    url = "git://github.com/mah0x211/lua-string-split.git"
+    url = "git+https://github.com/mah0x211/lua-string-split.git"
 }
 description = {
     summary = "split a string into an array of substrings.",
